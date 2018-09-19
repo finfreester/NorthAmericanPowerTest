@@ -1,0 +1,28 @@
+using Microsoft.Practices.Unity;
+using System.Web.Http;
+using Unity.WebApi;
+using NorthAmericanPower.Data;
+
+namespace NorthAmericanPower.Web.Services
+{
+    public static class UnityConfig
+    {
+        public static void RegisterComponents()
+        {
+			var container = new UnityContainer();
+
+            // register all your components with the container here
+            // it is NOT necessary to register your controllers
+            
+            // e.g. container.RegisterType<ITestService, TestService>();
+
+            //ContainerControlledLifetimeManager allows AccountRepository to be static (Singleton) and always used when DI Container resolves
+            container.RegisterType<IAccountRepository, AccountRepository>(new ContainerControlledLifetimeManager());
+
+            // Container will take over lifetime management of the object
+            container.Resolve<IAccountRepository>();
+
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+        }
+    }
+}
